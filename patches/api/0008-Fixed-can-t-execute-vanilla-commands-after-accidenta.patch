@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: xuyin <1573880184@qq.com>
+Date: Wed, 15 Jan 2025 18:33:50 +0800
+Subject: [PATCH] Fixed can`t execute vanilla commands after accidentally
+ execute `reload confirm` command
+
+
+diff --git a/src/main/java/org/bukkit/command/SimpleCommandMap.java b/src/main/java/org/bukkit/command/SimpleCommandMap.java
+index baf0cbd2f995ebe2e4382244eff6e15ec125d790..4fd90c1bb18e5c13dbd1ccb15f412753938fca84 100644
+--- a/src/main/java/org/bukkit/command/SimpleCommandMap.java
++++ b/src/main/java/org/bukkit/command/SimpleCommandMap.java
+@@ -181,11 +181,15 @@ public class SimpleCommandMap implements CommandMap {
+ 
+     @Override
+     public synchronized void clearCommands() {
+-        for (Map.Entry<String, Command> entry : knownCommands.entrySet()) {
+-            entry.getValue().unregister(this);
++        // Fixed can`t execute vanilla commands after accidentally execute `reload confirm` command
++        if (false) {
++            for (Map.Entry<String, Command> entry : knownCommands.entrySet()) {
++                entry.getValue().unregister(this);
++            }
++
++            knownCommands.clear();
++            setDefaultCommands();
+         }
+-        knownCommands.clear();
+-        setDefaultCommands();
+     }
+ 
+     @Override
